@@ -1,8 +1,10 @@
 import React from 'react';
 import { Text } from 'react-native';
 
-export const Map = () => {
+const Map = () => {
   return (
     <Text>Map</Text>
   );
 };
+
+export default Map;

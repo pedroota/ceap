@@ -1,9 +1,14 @@
+// Modules
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
+
+// Components
 import { ButtonCTA } from '../components/atoms/ButtonCTA';
+
+// Styles
 import colors from '../styles/colors';
 
-export const Home = () => {
+const Home = () => {
   return (
     <View style={styles.container}>
       <ButtonCTA />
@@ -19,3 +24,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   }
 });
+
+export default Home;
