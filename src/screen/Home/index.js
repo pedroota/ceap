@@ -14,7 +14,7 @@ const Home = () => {
         type="logo"
         alt="Logo de Ceap"
         propsArea={{
-          spaceTop: 24
+          spaceTop: 48
         }}
       />
       <Title size={32}>
