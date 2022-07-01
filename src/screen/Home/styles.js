@@ -9,3 +9,9 @@ export const Screen = styled.SafeAreaView`
 
   background-color: ${colors.white};
 `;
+
+export const Area = styled.View`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;

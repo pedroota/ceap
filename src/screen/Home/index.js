@@ -6,9 +6,10 @@ import {
   ButtonCTA, 
   ImageSvg,
   Title,
-  Input
+  Input,
+  Link
 } from '../../components';
-import { Screen } from './styles';
+import { Screen, Area } from './styles';
 
 // Hooks
 import useAnimate from '../../hooks/useAnimate';
@@ -57,9 +58,17 @@ const Home = () => {
       <Title size={32}>
         Digite seu CEP
       </Title>
-      <Input
-        placeholder="CEP"
-      />
+      <Area>
+        <Input
+          placeholder="CEP"
+        />
+        <Link 
+          linkScreenName="search-address"
+          style={{ marginTop: 16 }}
+        >
+          Esqueceu o seu CEP?
+        </Link>
+      </Area>
       <ButtonCTA/>
     </Screen>
   );
