@@ -20,17 +20,21 @@ const configAnimation = {
   useNativeDriver: false
 };
 
-function Svg({ type, propsSvg }) {
+function Svg({ type, propsContainerSvg }) {
   switch (type) {
     default:
     case "logo":
-        return <IconLogo { ...propsSvg }/>
+        return (
+          <Animated.View { ...propsContainerSvg }>
+            <IconLogo/>
+          </Animated.View>
+        )
   }
 }
 
 const ImageSvg = ({ 
   propsArea, 
-  propsSvg, 
+  propsContainerSvg, 
   type, 
   alt 
 }) => {
@@ -58,7 +62,7 @@ const ImageSvg = ({
     >
       <Svg
         type={type}
-        propsSvg={propsSvg}
+        propsContainerSvg={propsContainerSvg}
       />
     </AreaAnimation>
   )
