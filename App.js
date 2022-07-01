@@ -1,25 +1,17 @@
 // Modules
-import { StyleSheet, Text, View, StatusBar } from 'react-native';
+import { StatusBar } from 'react-native';
 
-// Screens
-import { Home } from './src/screen/Home';
-import { Map } from './src/screen/Map';
-import { SplashScreen } from './src/screen/SplashScreen';
+// styles
+import colors from './src/styles/colors';
 
-const heightStatusBar = StatusBar.currentHeight;
+// Components
+import Router from './src/router';
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Home />
-      <StatusBar style='auto' />
-    </View>
+    <>
+      <Router/>
+      <StatusBar barStyle='dark-content' backgroundColor={colors.white} />
+    </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    // paddingVertical: heightStatusBar,
-  }
-})
