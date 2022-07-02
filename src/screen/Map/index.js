@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 
 // Components
 import { Map } from './styles';
+import { Marker } from 'react-native-maps';
 
 // Contexts
 import { useCEP } from '../../contexts/CEPContext';
@@ -17,57 +18,79 @@ const MapScreen = () => {
   const navigation = useNavigation();
   const [ cepValue ] = useCEP();
   const [ data, setData ] = useState({});
+  const [ isLoaded, setIsLoaded ] = useState(false);
 
   async function fetchData() {
-    // try {
-      const responseCEP = await cepService.getByCEP("01001000");
+    try {
+      const responseCEP = await cepService.getByCEP(cepValue);
+      
+      console.log(responseCEP.data);
+      
       const responseAddress = await locationServices.getByAddress({
         city: responseCEP.data.localidade,
+        street: responseCEP.data.logradouro,
         state: responseCEP.data.uf
       })
-      console.log(responseAddress.data[0]);
+      
+      console.log(responseAddress)
+
       setData({
-        latitude: Number(responseAddress.data[0].boundingbox[0]),
-        longitude: Number(responseAddress.data[0].boundingbox[2]),
-        latitudeDelta: Number(responseAddress.data[0].boundingbox[1]),
-        longitudeDelta: Number(responseAddress.data[0].boundingbox[3]) 
+        latitude: Number(responseAddress.data[0].lat),
+        longitude: Number(responseAddress.data[0].lon),
       });
-
-      // setData(response.data);
-    // } catch (error) {
-    //   Alert.alert(
-    //     "Error",
-    //     "Não foi possível buscar o CEP"
-    //   );
-    //   navigation.navigate("home");
-    // }
+    } catch (error) {
+      Alert.alert("Não foi possível buscar a localização do CEP")
+      navigation.navigate("home");
+    } finally {
+      setIsLoaded(true);
+    }
   }
-
-  console.log(data);
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [ fetchData ]);
 
   return (
-    <Map
-      style={{
-        width: "100%",
-        height: "100%"
-      }}
-      
-      initialRegion={{
-        latitude: data.latitude,
-        longitude: data.longitude,
-        latitudeDelta: data.latitudeDelta,
-        longitudeDelta: data.longitudeDelta
-        // latitude: data.latitude,
-        // longitude: data.longitude,
-        // latitudeDelta: 0,
-        // longitudeDelta: 0,
-      }}
+    <Map      
+      initialRegion={
+        isLoaded
+        ?
+        {
+          latitude: data.latitude,
+          longitude: data.longitude,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421
+        }
+        :
+        {
+          latitude: 37.78825,
+          longitude: -122.4324,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421
+        }
+      }
     >
-
+      <Marker
+        coordinate={
+          isLoaded
+          ?
+          {
+            latitude: data.latitude,
+            longitude: data.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421
+          }
+          :
+          {
+            latitude: 37.78825,
+            longitude: -122.4324,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421
+          }
+        }
+        title="Localização do CEP"
+        description=""
+      />
     </Map>
   );
 };

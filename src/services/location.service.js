@@ -2,9 +2,10 @@ import { Location } from "./api";
 
 const getByAddress = async ({ 
   city,
-  state
+  state,
+  street
 }) => {
-  return await Location.get(`search?country=Brazil&city=${city}&state=${state}&format=json&limit=1`);
+  return await Location.get(`search?country=Brazil&city=${city}&state=${state}&street=${street}&format=json&limit=1`);
 }
 
 export const locationServices = {
