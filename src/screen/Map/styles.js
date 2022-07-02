@@ -1,11 +1,10 @@
+// Core
 import styled from 'styled-components/native'
 
-import colors from '../../styles/colors'
+// Components
+import MapView from 'react-native-maps';
 
-export const Screen = styled.SafeAreaView`
-  flex: 1;
-  justify-content: space-between;
-  align-items: center;
-
-  background-color: ${colors.white};
+export const Map = styled(MapView)`
+  width: 100%;
+  height: 100%;
 `;

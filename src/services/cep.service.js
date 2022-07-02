@@ -1,6 +1,6 @@
-import api from "./api";
+import { CEP } from "./api";
 
-const getByCEP = async cep => await api.get(`ws/${cep}/json/`);
+const getByCEP = async cep => await CEP.get(`ws/${cep}/json/`);
 
 export const cepService = {
   getByCEP

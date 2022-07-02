@@ -7,7 +7,7 @@ import {
 const CEPContext = createContext({});
 
 export function CEPProvider({ children }) {
-  const [ cep, setCep ] = useState({});
+  const [ cep, setCep ] = useState("");
   
   function changeCep(cep) {
     setCep(cep);
