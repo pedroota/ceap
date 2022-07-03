@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { StatusBar } from 'expo-status-bar';
 
 // Components
 import { Map } from './styles';
@@ -62,6 +63,10 @@ const MapScreen = () => {
 
   return (
     <>
+      <StatusBar
+        translucent={true}
+        backgroundColor="transparent"
+      />
       <Map region={data}>
         <Marker
           coordinate={data}
