@@ -4,34 +4,27 @@ import {
   useState 
 } from "react";
 
-const CEPContext = createContext({});
+const QuantityFetchContext = createContext({});
 
-export function CEPProvider({ children }) {
-  const [ cep, setCep ] = useState("");
+export function QuantityFetchProvider({ children }) {
   const [ quantityFetch, setQuantityFetch ] = useState(0);
   
-  function changeCep(cep) {
-    setCep(cep);
-  }
-
   function changeQuantityFetch(value) {
     setQuantityFetch(value);
   }
 
   return (
-    <CEPContext.Provider 
+    <QuantityFetchContext.Provider 
       value={[
-        cep,
-        changeCep,
         quantityFetch,
         changeQuantityFetch
       ]}
     >
       { children }
-    </CEPContext.Provider>
+    </QuantityFetchContext.Provider>
   )
 }
 
-export function useCEP() {
-  return useContext(CEPContext);
+export function useQuantityFetch() {
+  return useContext(QuantityFetchContext);
 }

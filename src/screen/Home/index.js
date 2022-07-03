@@ -15,11 +15,11 @@ import { Screen, Area } from './styles';
 // Hooks
 import useAnimate from '../../hooks/useAnimate';
 
-// Services
-import { cepService } from '../../services/cep.service';
-
 // Contexts
 import { useCEP } from '../../contexts/CEPContext';
+
+// Utils
+import Masks from '../../utils/masks';
 
 const XY_CONFIG_ANIMATION = {
   type: "ValueXY",
@@ -75,7 +75,7 @@ const Home = () => {
       <Area>
         <Input
           placeholder="CEP"
-          value={cep}
+          value={Masks.cep(cep)}
           onChangeText={changeCep}
           keyboardType="numeric"
         />

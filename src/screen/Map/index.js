@@ -1,5 +1,5 @@
 // Core
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
@@ -11,6 +11,7 @@ import { LoadingModal, InputMap } from '../../components';
 
 // Contexts
 import { useCEP } from '../../contexts/CEPContext';
+import { useQuantityFetch } from '../../contexts/QuantityFetchContext';
 
 // Services
 import { cepService } from '../../services/cep.service';
@@ -31,11 +32,13 @@ const MapScreen = () => {
   const [ data, setData ] = useState(initialData);
   const [ isLoaded, setIsLoaded ] = useState(false);
   const [ isStarted, setIsStarted ] = useState(true);
+  const [ quantityFetch ] = useQuantityFetch();
+  const [ valueCep ] = useCEP();
 
-  async function fetchData() {
+  const fetchData = useCallback(async () => {
     try {
       if (!isLoaded) {
-        const responseCEP = await cepService.getByCEP("01001000");
+        const responseCEP = await cepService.getByCEP(valueCep);
       
         const responseAddress = await locationServices.getByAddress({
           city: responseCEP.data.localidade,
@@ -56,13 +59,42 @@ const MapScreen = () => {
       setIsLoaded(true);
       setIsStarted(false);
     }
-  }
+  }, [ valueCep ])
+  // async function fetchData() {
+  //   try {
+  //     if (!isLoaded) {
+  //       const responseCEP = await cepService.getByCEP(valueCep);
+      
+  //       const responseAddress = await locationServices.getByAddress({
+  //         city: responseCEP.data.localidade,
+  //         street: responseCEP.data.logradouro,
+  //         state: responseCEP.data.uf
+  //       })
+        
+  //       setData({
+  //         ...data,
+  //         latitude: Number(responseAddress.data[0].lat),
+  //         longitude: Number(responseAddress.data[0].lon),
+  //       });
+  //     }
+  //   } catch (error) {
+  //     Alert.alert("Não foi possível buscar a localização do CEP")
+  //     navigation.navigate("home");
+  //   } finally {
+  //     setIsLoaded(true);
+  //     setIsStarted(false);
+  //   }
+  // }
 
   useEffect(() => {
     if (isStarted) {
       fetchData();
     }
   }, [ ]);
+
+  useEffect(() => {
+    fetchData();
+  }, [ quantityFetch ]);
 
   return (
     <Container>
