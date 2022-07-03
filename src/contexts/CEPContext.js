@@ -8,14 +8,9 @@ const CEPContext = createContext({});
 
 export function CEPProvider({ children }) {
   const [ cep, setCep ] = useState("");
-  const [ quantityFetch, setQuantityFetch ] = useState(0);
   
   function changeCep(cep) {
     setCep(cep);
-  }
-
-  function changeQuantityFetch(value) {
-    setQuantityFetch(value);
   }
 
   return (
@@ -23,8 +18,6 @@ export function CEPProvider({ children }) {
       value={[
         cep,
         changeCep,
-        quantityFetch,
-        changeQuantityFetch
       ]}
     >
       { children }

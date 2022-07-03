@@ -1,5 +1,6 @@
 // Core
 import { Alert } from "react-native";
+import { useEffect, useState } from "react";
 
 // Components
 import Input from "../Input";
@@ -13,24 +14,28 @@ import { useQuantityFetch } from "../../contexts/QuantityFetchContext";
 // Utils
 import Masks from "../../utils/masks";
 
-const InputMap = () => {
-  const [ cepValue, changeCep ] = useCEP();
-  const [ _quantityFetch, changeQuantityFetch ] = useQuantityFetch();
+const InputMap = ({ valueCep }) => {
+  const [ cep, setCep ] = useState("");
+  const [ _valueContextCep, changeValueContextCep ] = useCEP();
+  let [ quantityFetch, changeQuantityFetch ] = useQuantityFetch();
+
+  useEffect(() => {
+    setCep(valueCep);
+  }, []);
 
   function fetchCEP() {
-    if (cepValue.length === 0) {
+    if (cep.length === 0) {
       Alert.alert("Preencha o campo de CEP");
       return false;
     }
 
-    if (cepValue.length < 9) {
+    if (cep.length < 9) {
       Alert.alert("Preencha o resto do campo de CEP");
       return false;
     }
     
-    changeCep(cepValue.replace("-", ""))
-
-    changeQuantityFetch(value => value += 1);
+    changeValueContextCep(cep.replace("-", ""));
+    changeQuantityFetch(quantityFetch += 1)
   }
 
   return (
@@ -38,8 +43,8 @@ const InputMap = () => {
       <Input
         width="70%"
         placeholder="Pesquisar CEP"
-        value={Masks.cep(cepValue)}
-        onChangeText={changeCep}
+        value={Masks.cep(cep)}
+        onChangeText={setCep}
         keyboardType="numeric"
       />
       <ButtonFetch onPress={fetchCEP}>

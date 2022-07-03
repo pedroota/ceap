@@ -29,68 +29,43 @@ const initialData = {
 
 const MapScreen = () => {
   const navigation = useNavigation();
-  const [ data, setData ] = useState(initialData);
+  const [ data, setData ] = useState({
+    cepData: {},
+    locationData: []
+  });
   const [ isLoaded, setIsLoaded ] = useState(false);
   const [ isStarted, setIsStarted ] = useState(true);
-  const [ quantityFetch ] = useQuantityFetch();
   const [ valueCep ] = useCEP();
+  const [ quantityFetch ] = useQuantityFetch();
 
   const fetchData = useCallback(async () => {
     try {
-      if (!isLoaded) {
-        const responseCEP = await cepService.getByCEP(valueCep);
+      setIsLoaded(false);
+      const responseCEP = await cepService.getByCEP(valueCep);
+
+      const responseAddress = await locationServices.getByAddress({
+        city: responseCEP.data.localidade,
+        street: responseCEP.data.logradouro,
+        state: responseCEP.data.uf
+      })
       
-        const responseAddress = await locationServices.getByAddress({
-          city: responseCEP.data.localidade,
-          street: responseCEP.data.logradouro,
-          state: responseCEP.data.uf
-        })
-        
-        setData({
-          ...data,
-          latitude: Number(responseAddress.data[0].lat),
-          longitude: Number(responseAddress.data[0].lon),
-        });
+      if (responseAddress.data.length === 0 ) {
+        Alert.alert("Não foi possível encontrar nenhum endereço no mapa");
+
+        return false;
       }
+
+      setData({
+        cepData: responseCEP.data,
+        locationData: responseAddress.data
+      });
     } catch (error) {
-      Alert.alert("Não foi possível buscar a localização do CEP")
+      Alert.alert("Error ao buscar as localizações do CEP")
       navigation.navigate("home");
     } finally {
       setIsLoaded(true);
-      setIsStarted(false);
     }
   }, [ valueCep ])
-  // async function fetchData() {
-  //   try {
-  //     if (!isLoaded) {
-  //       const responseCEP = await cepService.getByCEP(valueCep);
-      
-  //       const responseAddress = await locationServices.getByAddress({
-  //         city: responseCEP.data.localidade,
-  //         street: responseCEP.data.logradouro,
-  //         state: responseCEP.data.uf
-  //       })
-        
-  //       setData({
-  //         ...data,
-  //         latitude: Number(responseAddress.data[0].lat),
-  //         longitude: Number(responseAddress.data[0].lon),
-  //       });
-  //     }
-  //   } catch (error) {
-  //     Alert.alert("Não foi possível buscar a localização do CEP")
-  //     navigation.navigate("home");
-  //   } finally {
-  //     setIsLoaded(true);
-  //     setIsStarted(false);
-  //   }
-  // }
-
-  useEffect(() => {
-    if (isStarted) {
-      fetchData();
-    }
-  }, [ ]);
 
   useEffect(() => {
     fetchData();
@@ -102,10 +77,20 @@ const MapScreen = () => {
         translucent={true}
         backgroundColor="transparent"
       />
-      <InputMap/>
-      <Map region={data}>
+      <InputMap valueCep={valueCep}/>
+      <Map region={{
+        latitude: Number(data?.locationData[0]?.lat ?? 37.78825),
+        longitude: Number(data?.locationData[0]?.lon ?? -122.4324),
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421
+      }}>
         <Marker
-          coordinate={data}
+          coordinate={{
+            latitude: Number(data?.locationData[0]?.lat ?? 37.78825),
+            longitude: Number(data?.locationData[0]?.lon ?? -122.4324),
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421
+          }}
           title="Localização do CEP"
         />
       </Map>
