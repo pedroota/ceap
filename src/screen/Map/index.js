@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 // Components
 import { Map } from './styles';
 import { Marker } from 'react-native-maps';
+import { LoadingModal } from '../../components';
 
 // Contexts
 import { useCEP } from '../../contexts/CEPContext';
@@ -13,6 +14,9 @@ import { useCEP } from '../../contexts/CEPContext';
 // Services
 import { cepService } from '../../services/cep.service';
 import { locationServices } from '../../services/location.service';
+
+// Styles
+import colors from '../../styles/colors';
 
 const initialData = {
   latitude: 37.78825,
@@ -57,12 +61,18 @@ const MapScreen = () => {
   }, [ ]);
 
   return (
-    <Map region={data}>
-      <Marker
-        coordinate={data}
-        title="Localização do CEP"
+    <>
+      <Map region={data}>
+        <Marker
+          coordinate={data}
+          title="Localização do CEP"
+        />
+      </Map>
+      <LoadingModal
+        visible={!isLoaded}
+        color={colors.green}
       />
-    </Map>
+    </>
   );
 };
 

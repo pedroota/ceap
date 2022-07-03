@@ -5,6 +5,7 @@ import Input from "./Input";
 import Link from "./Link";
 import ButtonPrimary from "./ButtonPrimary";
 import ButtonGhost from "./ButtonGhost";
+import LoadingModal from "./LoadingModal";
 
 export {
   ButtonCTA,
@@ -13,5 +14,6 @@ export {
   Input,
   Link,
   ButtonPrimary,
-  ButtonGhost
+  ButtonGhost,
+  LoadingModal
 }
