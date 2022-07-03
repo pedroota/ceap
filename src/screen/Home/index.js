@@ -1,5 +1,6 @@
 // Core
 import { useEffect } from 'react';
+import { useNavigation } from '@react-navigation/native';
 
 // Components
 import { 
@@ -13,6 +14,12 @@ import { Screen, Area } from './styles';
 
 // Hooks
 import useAnimate from '../../hooks/useAnimate';
+
+// Services
+import { cepService } from '../../services/cep.service';
+
+// Contexts
+import { useCEP } from '../../contexts/CEPContext';
 
 const XY_CONFIG_ANIMATION = {
   type: "ValueXY",
@@ -30,13 +37,20 @@ const XY_CONFIG_ANIMATION = {
 };
 
 const Home = () => {
+  const navigation = useNavigation();
+  const [ cep, changeCep ] = useCEP();
   const [ valueXY, XYAnimation ] = useAnimate(XY_CONFIG_ANIMATION);
   const [ opacityValue, opacityAnimation ] = useAnimate({to: 1});
 
   useEffect(() => {
     XYAnimation.start();
     opacityAnimation.start();
+
   }, []);
+  
+  async function goMap() {
+    navigation.navigate("map");
+  }
 
   return (
     <Screen>
@@ -61,6 +75,9 @@ const Home = () => {
       <Area>
         <Input
           placeholder="CEP"
+          value={cep}
+          onChangeText={changeCep}
+          keyboardType="numeric"
         />
         <Link 
           linkScreenName="search-address"
@@ -69,7 +86,9 @@ const Home = () => {
           Esqueceu o seu CEP?
         </Link>
       </Area>
-      <ButtonCTA/>
+      <ButtonCTA
+        onPress={goMap}
+      />
     </Screen>
   );
 };

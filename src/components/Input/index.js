@@ -13,7 +13,8 @@ const AreaInputAnimated = Animated.createAnimatedComponent(AreaInput);
 const Input = ({ 
   placeholder,
   value,
-  onChangeText
+  onChangeText,
+  keyboardType
 }) => {
   const [ opacityValue, opacityAnimation ] = useAnimate({
     duration: 1000,
@@ -35,6 +36,7 @@ const Input = ({
       placeholder={placeholder}
       value={value}
       onChangeText={onChangeText}
+      keyboardType={keyboardType}
     />
   )
 }
