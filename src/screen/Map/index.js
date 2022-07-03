@@ -5,9 +5,9 @@ import { useNavigation } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
 
 // Components
-import { Map } from './styles';
+import { Map, Container } from './styles';
 import { Marker } from 'react-native-maps';
-import { LoadingModal } from '../../components';
+import { LoadingModal, Input } from '../../components';
 
 // Contexts
 import { useCEP } from '../../contexts/CEPContext';
@@ -35,7 +35,7 @@ const MapScreen = () => {
   async function fetchData() {
     try {
       if (!isLoaded) {
-        const responseCEP = await cepService.getByCEP(cepValue);
+        const responseCEP = await cepService.getByCEP("01001000");
       
         const responseAddress = await locationServices.getByAddress({
           city: responseCEP.data.localidade,
@@ -62,10 +62,15 @@ const MapScreen = () => {
   }, [ ]);
 
   return (
-    <>
+    <Container>
       <StatusBar
         translucent={true}
         backgroundColor="transparent"
+      />
+      <Input
+        activePosition={true}
+        horizontal="50px"
+        vertical="50%"
       />
       <Map region={data}>
         <Marker
@@ -77,7 +82,7 @@ const MapScreen = () => {
         visible={!isLoaded}
         color={colors.green}
       />
-    </>
+    </Container>
   );
 };
 

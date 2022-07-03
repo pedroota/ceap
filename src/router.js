@@ -18,7 +18,7 @@ function RouterScreen() {
       <CEPProvider>
         <NativeStack.Navigator
           screenOptions={{ headerShown: false }}
-          initialRouteName="home"
+          initialRouteName="map"
         >
           <NativeStack.Screen name="home" component={Home}/>
           <NativeStack.Screen name="search-address" component={SearchAddress}/>

@@ -8,3 +8,7 @@ export const Map = styled(MapView)`
   width: 100%;
   height: 100%;
 `;
+
+export const Container = styled.SafeAreaView`
+  flex: 1;
+`;
