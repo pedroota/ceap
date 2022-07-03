@@ -15,9 +15,7 @@ const Input = ({
   value,
   onChangeText,
   keyboardType,
-  activePosition,
-  horizontal,
-  vertical
+  width
 }) => {
   const [ opacityValue, opacityAnimation ] = useAnimate({
     duration: 1000,
@@ -40,9 +38,7 @@ const Input = ({
       value={value}
       onChangeText={onChangeText}
       keyboardType={keyboardType}
-      activePosition={activePosition}
-      horizontal={horizontal}
-      vertical={vertical}
+      width={width}
     />
   )
 }

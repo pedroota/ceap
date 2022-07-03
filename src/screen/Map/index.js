@@ -7,7 +7,7 @@ import { StatusBar } from 'expo-status-bar';
 // Components
 import { Map, Container } from './styles';
 import { Marker } from 'react-native-maps';
-import { LoadingModal, Input } from '../../components';
+import { LoadingModal, InputMap } from '../../components';
 
 // Contexts
 import { useCEP } from '../../contexts/CEPContext';
@@ -28,9 +28,9 @@ const initialData = {
 
 const MapScreen = () => {
   const navigation = useNavigation();
-  const [ cepValue ] = useCEP();
   const [ data, setData ] = useState(initialData);
   const [ isLoaded, setIsLoaded ] = useState(false);
+  const [ isStarted, setIsStarted ] = useState(true);
 
   async function fetchData() {
     try {
@@ -54,11 +54,14 @@ const MapScreen = () => {
       navigation.navigate("home");
     } finally {
       setIsLoaded(true);
+      setIsStarted(false);
     }
   }
 
   useEffect(() => {
-    fetchData();
+    if (isStarted) {
+      fetchData();
+    }
   }, [ ]);
 
   return (
@@ -67,11 +70,7 @@ const MapScreen = () => {
         translucent={true}
         backgroundColor="transparent"
       />
-      <Input
-        activePosition={true}
-        horizontal="50px"
-        vertical="50%"
-      />
+      <InputMap/>
       <Map region={data}>
         <Marker
           coordinate={data}
