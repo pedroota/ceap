@@ -1,6 +1,7 @@
 // Modules
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 // Screens
 import Home from './screen/Home';
@@ -16,18 +17,20 @@ const NativeStack = createNativeStackNavigator();
 function RouterScreen() {
   return (
     <NavigationContainer>
-      <CEPProvider>
-        <QuantityFetchProvider>
-          <NativeStack.Navigator
-            screenOptions={{ headerShown: false }}
-            initialRouteName="home"
-          >
-            <NativeStack.Screen name="home" component={Home}/>
-            <NativeStack.Screen name="search-address" component={SearchAddress}/>
-            <NativeStack.Screen name="map" component={MapScreen}/>
-          </NativeStack.Navigator>
-        </QuantityFetchProvider>
-      </CEPProvider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <CEPProvider>
+          <QuantityFetchProvider>
+            <NativeStack.Navigator
+              screenOptions={{ headerShown: false }}
+              initialRouteName="map"
+            >
+              <NativeStack.Screen name="home" component={Home}/>
+              <NativeStack.Screen name="search-address" component={SearchAddress}/>
+              <NativeStack.Screen name="map" component={MapScreen}/>
+            </NativeStack.Navigator>
+          </QuantityFetchProvider>
+        </CEPProvider>
+      </GestureHandlerRootView>
     </NavigationContainer>
   )
 }

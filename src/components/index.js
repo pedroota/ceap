@@ -7,6 +7,7 @@ import ButtonPrimary from "./ButtonPrimary";
 import ButtonGhost from "./ButtonGhost";
 import LoadingModal from "./LoadingModal";
 import InputMap from "./InputMap";
+import DrawerBottom from "./DrawerBottom";
 
 export {
   ButtonCTA,
@@ -17,5 +18,6 @@ export {
   ButtonPrimary,
   ButtonGhost,
   LoadingModal,
-  InputMap
+  InputMap,
+  DrawerBottom
 }
