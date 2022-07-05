@@ -6,6 +6,12 @@ import Animated, {
   withSpring
 } from "react-native-reanimated";
 import calculateWidthElement from "../../utils/calculateWidthElement";
+import { Dimensions } from "react-native";
+
+/**
+ * Vídeo de referência
+ * https://www.youtube.com/watch?v=KvRqsRwpwhY&t=1158s
+ */
 
 // Components
 import { 
@@ -44,6 +50,7 @@ const DrawerBottom = ({
       contextYValue.value = yValue.value;
     })
     .onChange((event) => {
+      console.log(event.absoluteY);
       if (event.absoluteY >= 300 && event.absoluteY <= 597.5) {
         yValue.value = event.translationY + contextYValue.value;
       }
