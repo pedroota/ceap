@@ -1,7 +1,7 @@
 // Core
 import { useEffect, useState, useCallback } from 'react';
 import { Alert } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
 
 // Components
@@ -12,6 +12,7 @@ import { LoadingModal, InputMap, DrawerBottom } from '../../components';
 // Contexts
 import { useCEP } from '../../contexts/CEPContext';
 import { useQuantityFetch } from '../../contexts/QuantityFetchContext';
+import { useAddress } from '../../contexts/AddressContext';
 
 // Services
 import { cepService } from '../../services/cep.service';
@@ -34,34 +35,57 @@ const MapScreen = () => {
     locationData: []
   });
   const [ isLoaded, setIsLoaded ] = useState(false);
-  const [ isStarted, setIsStarted ] = useState(true);
-  const [ valueCep ] = useCEP();
+  const [ valueCep, changeCep ] = useCEP();
+  const [ address ] = useAddress();
   const [ quantityFetch ] = useQuantityFetch();
+  const router = useRoute();
 
   const fetchData = useCallback(async () => {
     try {
       setIsLoaded(false);
-      const responseCEP = await cepService.getByCEP(valueCep);
+      if (router.params.type === "CEP") {
+        const responseCEP = await cepService.getByCEP(valueCep);
+  
+        const responseAddress = await locationServices.getByAddress({
+          city: responseCEP.data.localidade,
+          street: responseCEP.data.logradouro,
+          state: responseCEP.data.uf
+        });
+  
+        if (responseAddress.data.length === 0 ) {
+          Alert.alert("Não foi possível encontrar nenhum endereço no mapa");
+  
+          return false;
+        }
+  
+        setData({
+          cepData: responseCEP.data,
+          locationData: responseAddress.data
+        });
+      } else {
+        const responseCEP = await cepService.getByAddress(address);
 
-      const responseAddress = await locationServices.getByAddress({
-        city: responseCEP.data.localidade,
-        street: responseCEP.data.logradouro,
-        state: responseCEP.data.uf
-      });
+        const responseAddress = await locationServices.getByAddress({
+          city: responseCEP.data.localidade,
+          street: responseCEP.data.logradouro,
+          state: responseCEP.data.uf
+        });
 
-      console.log(responseAddress);
-      
-      if (responseAddress.data.length === 0 ) {
-        Alert.alert("Não foi possível encontrar nenhum endereço no mapa");
+        if (responseAddress.data.length === 0 ) {
+          Alert.alert("Não foi possível encontrar nenhum endereço no mapa");
+  
+          return false;
+        }
+  
+        changeCep(responseCEP.data.cep);
 
-        return false;
+        setData({
+          cepData: responseCEP.data,
+          locationData: responseAddress.data
+        });
       }
-
-      setData({
-        cepData: responseCEP.data,
-        locationData: responseAddress.data
-      });
     } catch (error) {
+      console.log(error);
       Alert.alert("Error ao buscar as localizações do CEP")
       navigation.navigate("home");
     } finally {

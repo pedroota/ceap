@@ -1,5 +1,6 @@
 // Core
-import { useEffect } from 'react';
+import { Alert } from 'react-native';
+import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 
 // Components
@@ -38,7 +39,8 @@ const XY_CONFIG_ANIMATION = {
 
 const Home = () => {
   const navigation = useNavigation();
-  const [ cep, changeCep ] = useCEP();
+  const [ valueInputCep, setValueInputCep ] = useState("");
+  const [ _cep, changeCep ] = useCEP();
   const [ valueXY, XYAnimation ] = useAnimate(XY_CONFIG_ANIMATION);
   const [ opacityValue, opacityAnimation ] = useAnimate({to: 1});
 
@@ -48,8 +50,15 @@ const Home = () => {
 
   }, []);
   
-  async function goMap() {
-    navigation.navigate("map");
+  function goMap() {
+    if (valueInputCep.length < 9) {
+      Alert.alert("Preencha o resto do CEP");
+      return false;
+    }
+
+    changeCep(valueInputCep);
+
+    navigation.navigate("map", { type: "CEP" });
   }
 
   return (
@@ -75,8 +84,8 @@ const Home = () => {
       <Area>
         <Input
           placeholder="CEP"
-          value={Masks.cep(cep)}
-          onChangeText={changeCep}
+          value={Masks.cep(valueInputCep)}
+          onChangeText={setValueInputCep}
           keyboardType="numeric"
         />
         <Link 

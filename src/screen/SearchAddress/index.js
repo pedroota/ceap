@@ -1,6 +1,7 @@
 // Core
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
+import { Alert, Keyboard } from "react-native";
 
 // Components
 import { 
@@ -10,10 +11,21 @@ import {
   ButtonPrimary,
   ButtonGhost
 } from "../../components";
-import { Screen, AreaButtons } from "./styles";
+
+import { 
+  Screen, 
+  AreaButtons, 
+  AreaInputs,
+  Label,
+  FieldArea
+} from "./styles";
 
 // Hooks
 import useAnimate from '../../hooks/useAnimate';
+
+// Contexts
+import { useQuantityFetch } from "../../contexts/QuantityFetchContext";
+import { useAddress } from "../../contexts/AddressContext";
 
 const XY_CONFIG_ANIMATION = {
   type: "ValueXY",
@@ -30,8 +42,18 @@ const XY_CONFIG_ANIMATION = {
   typeAnimation: "timing"
 };
 
+const initialAddressFields = {
+  street: "",
+  state: "",
+  city: ""
+};
+
 const SearchAddress = () => {
   const navigation = useNavigation();
+  const [ addressFields, setAddressFields ] = useState(initialAddressFields);
+  const [ isHiddenElements, setIsHiddenElements ] = useState(false);
+  let [ quantityFetch, changeQuantityFetch ] = useQuantityFetch();
+  const [ _address, changeAddress ] = useAddress();
 
   const [ valueXY, XYAnimation ] = useAnimate(XY_CONFIG_ANIMATION);
   const [ opacityValue, opacityAnimation ] = useAnimate({to: 1});
@@ -39,6 +61,19 @@ const SearchAddress = () => {
   useEffect(() => {
     XYAnimation.start();
     opacityAnimation.start();
+
+    const subscriptionShow = Keyboard.addListener("keyboardDidShow", () => {
+      setIsHiddenElements(true);
+    });
+
+    const subscriptionHidden = Keyboard.addListener("keyboardDidHide", () => {
+      setIsHiddenElements(false);
+    });
+
+    return () => {
+      subscriptionShow.remove();
+      subscriptionHidden.remove();
+    }
   }, []);
 
   function goBack() {
@@ -46,32 +81,80 @@ const SearchAddress = () => {
   };
 
   function goMap() {
-    navigation.navigate("map");
+    if (addressFields.state.length === 0) {
+      Alert.alert("Preencha o campo de estado");
+      return false;
+    }
+
+    if (addressFields.city.length === 0) {
+      Alert.alert("Preencha o campo de cidade");
+      return false;
+    }
+    
+    if (addressFields.street.length === 0) {
+      Alert.alert("Preencha o campo de rua");
+      return false;
+    }
+
+    changeAddress(addressFields);
+    changeQuantityFetch(quantityFetch++);
+    
+    navigation.navigate("map", { type: "address" });
   }
 
   return (
     <Screen>
-      <ImageSvg
-        type="logo"
-        alt="Logo de Ceap"
-        propsArea={{
-          spaceTop: 48
-        }}
-        propsContainerSvg={{
-          style: [
-            {
-              opacity: opacityValue
-            },
-            valueXY.getLayout()
-          ]
-        }}
-      />
-      <Title size={32}>
-        Digite um endereço
-      </Title>
-      <Input
-        placeholder="Endereço"
-      />
+      {
+        isHiddenElements
+        ||
+        <>
+          <ImageSvg
+            type="logo"
+            alt="Logo de Ceap"
+            propsArea={{
+              spaceTop: 48
+            }}
+            propsContainerSvg={{
+              style: [
+                {
+                  opacity: opacityValue
+                },
+                valueXY.getLayout()
+              ]
+            }}
+          />
+          <Title size={32}>
+            Digite um endereço
+          </Title>
+        </>
+      }
+      
+      <AreaInputs>
+        <FieldArea>
+          <Label>Estado</Label>
+          <Input
+            placeholder="Estado"
+            value={addressFields.state}
+            onChangeText={value => setAddressFields({ ...addressFields, state: value })}
+          />
+        </FieldArea>
+        <FieldArea>
+          <Label>Cidade</Label>
+          <Input
+            placeholder="Cidade"
+            value={addressFields.city}
+            onChangeText={value => setAddressFields({ ...addressFields, city: value })}
+          />
+        </FieldArea>
+        <FieldArea>
+          <Label>Rua</Label>
+          <Input
+            placeholder="Rua"
+            value={addressFields.street}
+            onChangeText={value => setAddressFields({ ...addressFields, street: value })}
+          />
+        </FieldArea>
+      </AreaInputs>
       <AreaButtons>
         <ButtonGhost 
           spaceBottom={8}

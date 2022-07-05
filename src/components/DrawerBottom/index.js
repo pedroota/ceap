@@ -49,7 +49,7 @@ const DrawerBottom = ({
       }
     })
     .onEnd((event) => {
-      if (event.absoluteY <= 410) {
+      if (event.absoluteY <= 350) {
         yValue.value = withSpring(70);
       } else {
         yValue.value = withSpring(352);

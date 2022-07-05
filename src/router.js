@@ -11,6 +11,7 @@ import MapScreen from './screen/Map';
 // Contexts
 import { CEPProvider } from './contexts/CEPContext';
 import { QuantityFetchProvider } from './contexts/QuantityFetchContext';
+import { AddressProvider } from './contexts/AddressContext';
 
 const NativeStack = createNativeStackNavigator();
 
@@ -19,16 +20,18 @@ function RouterScreen() {
     <NavigationContainer>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <CEPProvider>
-          <QuantityFetchProvider>
-            <NativeStack.Navigator
-              screenOptions={{ headerShown: false }}
-              initialRouteName="home"
-            >
-              <NativeStack.Screen name="home" component={Home}/>
-              <NativeStack.Screen name="search-address" component={SearchAddress}/>
-              <NativeStack.Screen name="map" component={MapScreen}/>
-            </NativeStack.Navigator>
-          </QuantityFetchProvider>
+          <AddressProvider>
+            <QuantityFetchProvider>
+              <NativeStack.Navigator
+                screenOptions={{ headerShown: false }}
+                initialRouteName="home"
+              >
+                <NativeStack.Screen name="home" component={Home}/>
+                <NativeStack.Screen name="search-address" component={SearchAddress}/>
+                <NativeStack.Screen name="map" component={MapScreen}/>
+              </NativeStack.Navigator>
+            </QuantityFetchProvider>
+          </AddressProvider>
         </CEPProvider>
       </GestureHandlerRootView>
     </NavigationContainer>
