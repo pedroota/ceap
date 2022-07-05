@@ -41,13 +41,15 @@ const MapScreen = () => {
   const fetchData = useCallback(async () => {
     try {
       setIsLoaded(false);
-      const responseCEP = await cepService.getByCEP(/*valueCep*/"01001000");
+      const responseCEP = await cepService.getByCEP(valueCep);
 
       const responseAddress = await locationServices.getByAddress({
         city: responseCEP.data.localidade,
         street: responseCEP.data.logradouro,
         state: responseCEP.data.uf
-      })
+      });
+
+      console.log(responseAddress);
       
       if (responseAddress.data.length === 0 ) {
         Alert.alert("Não foi possível encontrar nenhum endereço no mapa");
@@ -78,12 +80,14 @@ const MapScreen = () => {
         backgroundColor="transparent"
       />
       <InputMap valueCep={valueCep}/>
-      <Map region={{
-        latitude: Number(data?.locationData[0]?.lat ?? 37.78825),
-        longitude: Number(data?.locationData[0]?.lon ?? -122.4324),
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421
-      }}>
+      <Map 
+        region={{
+          latitude: Number(data?.locationData[0]?.lat ?? 37.78825),
+          longitude: Number(data?.locationData[0]?.lon ?? -122.4324),
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421
+        }}
+      >
         <Marker
           coordinate={{
             latitude: Number(data?.locationData[0]?.lat ?? 37.78825),
@@ -98,7 +102,12 @@ const MapScreen = () => {
         visible={!isLoaded}
         color={colors.green}
       />
-      <DrawerBottom/>
+      <DrawerBottom
+        state={data?.cepData?.uf}
+        city={data?.cepData?.localidade}
+        district={data?.cepData?.bairro}
+        street={data?.cepData?.logradouro}
+      />
     </Container>
   );
 };

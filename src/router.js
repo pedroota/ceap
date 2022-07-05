@@ -22,7 +22,7 @@ function RouterScreen() {
           <QuantityFetchProvider>
             <NativeStack.Navigator
               screenOptions={{ headerShown: false }}
-              initialRouteName="map"
+              initialRouteName="home"
             >
               <NativeStack.Screen name="home" component={Home}/>
               <NativeStack.Screen name="search-address" component={SearchAddress}/>

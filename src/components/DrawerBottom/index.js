@@ -11,13 +11,21 @@ import calculateWidthElement from "../../utils/calculateWidthElement";
 import { 
   Container, 
   AreaLine,
-  Line 
+  Line,
+  AreaItem,
+  TitleItem,
+  ValueItem
 } from "./styles";
 
 const ContainerAnimation = Animated.createAnimatedComponent(Container);
 
-const DrawerBottom = () => {
-  const yValue = useSharedValue(252);
+const DrawerBottom = ({ 
+  state, 
+  city, 
+  district, 
+  street 
+}) => {
+  const yValue = useSharedValue(352);
   const contextYValue = useSharedValue(0);
   const valueWidth = calculateWidthElement(58);
 
@@ -36,16 +44,15 @@ const DrawerBottom = () => {
       contextYValue.value = yValue.value;
     })
     .onChange((event) => {
-      console.log(event.absoluteY);
-      if (event.absoluteY >= 400 && event.absoluteY <= 597.5) {
+      if (event.absoluteY >= 300 && event.absoluteY <= 597.5) {
         yValue.value = event.translationY + contextYValue.value;
       }
     })
     .onEnd((event) => {
-      if (event.absoluteY <= 510) {
-        yValue.value = withSpring(90);
+      if (event.absoluteY <= 410) {
+        yValue.value = withSpring(70);
       } else {
-        yValue.value = withSpring(252);
+        yValue.value = withSpring(352);
       }
     });
 
@@ -57,6 +64,22 @@ const DrawerBottom = () => {
         <AreaLine>
           <Line/>
         </AreaLine>
+        <AreaItem>
+          <TitleItem>Estado</TitleItem>
+          <ValueItem>{ state ?? "Informação não encontrada" }</ValueItem>
+        </AreaItem>
+        <AreaItem>
+          <TitleItem>Cidade</TitleItem>
+          <ValueItem>{ city ?? "Informação não encontrada" }</ValueItem>
+        </AreaItem>
+        <AreaItem>
+          <TitleItem>Bairro</TitleItem>
+          <ValueItem>{ district ?? "Informação não encontrada" }</ValueItem>
+        </AreaItem>
+        <AreaItem>
+          <TitleItem>Rua</TitleItem>
+          <ValueItem>{ street ?? "Informação não encontrada" }</ValueItem>
+        </AreaItem>
       </ContainerAnimation>
     </GestureDetector>
   )
