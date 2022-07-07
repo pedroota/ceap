@@ -34,6 +34,7 @@ const DrawerBottom = ({
   const yValue = useSharedValue(352);
   const contextYValue = useSharedValue(0);
   const valueWidth = calculateWidthElement(58);
+  const heightApp = Dimensions.get("window").height;
 
   const positionStyle = useAnimatedStyle(() => {
 
@@ -50,17 +51,11 @@ const DrawerBottom = ({
       contextYValue.value = yValue.value;
     })
     .onChange((event) => {
-      console.log(event.absoluteY);
-      if (event.absoluteY >= 300 && event.absoluteY <= 597.5) {
-        yValue.value = event.translationY + contextYValue.value;
-      }
+      yValue.value = event.translationY + contextYValue.value;
+      yValue.value = Math.max(yValue.value, heightApp / 10);
     })
     .onEnd((event) => {
-      if (event.absoluteY <= 350) {
-        yValue.value = withSpring(70);
-      } else {
-        yValue.value = withSpring(352);
-      }
+      yValue.value = withSpring(heightApp / 1.82);
     });
 
   return (
