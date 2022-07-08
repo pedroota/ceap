@@ -1,7 +1,7 @@
 // Core
 import { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { Alert, Keyboard } from "react-native";
+import { Alert, Keyboard, Dimensions } from "react-native";
 
 // Components
 import { 
@@ -19,6 +19,7 @@ import {
   Label,
   FieldArea
 } from "./styles";
+import { Picker } from "@react-native-picker/picker";
 
 // Hooks
 import useAnimate from '../../hooks/useAnimate';
@@ -26,6 +27,9 @@ import useAnimate from '../../hooks/useAnimate';
 // Contexts
 import { useQuantityFetch } from "../../contexts/QuantityFetchContext";
 import { useAddress } from "../../contexts/AddressContext";
+
+// Data
+import jsonUFs from "../../data/json-estados-brasileiros.json";
 
 const XY_CONFIG_ANIMATION = {
   type: "ValueXY",
@@ -47,6 +51,8 @@ const initialAddressFields = {
   state: "",
   city: ""
 };
+
+const widthApp = Dimensions.get("window").width;
 
 const SearchAddress = () => {
   const navigation = useNavigation();
@@ -132,11 +138,28 @@ const SearchAddress = () => {
       <AreaInputs>
         <FieldArea>
           <Label>Estado</Label>
-          <Input
-            placeholder="Estado"
-            value={addressFields.state}
-            onChangeText={value => setAddressFields({ ...addressFields, state: value })}
-          />
+          <Picker
+            style={{
+              width: widthApp - 58
+            }}
+            selectedValue={addressFields.state}
+            onValueChange={item => setAddressFields({ ...addressFields, state: item })}
+          >
+            <Picker.Item
+              value=""
+              label="Selecione um estado"
+            />
+            {
+              jsonUFs.UF.map(item => (
+                <Picker.Item
+                  label={`${item.nome} - ${item.sigla}`}
+                  value={item.sigla}
+                  key={item.sigla}
+                />
+              ))
+            }
+          </Picker>
+
         </FieldArea>
         <FieldArea>
           <Label>Cidade</Label>
